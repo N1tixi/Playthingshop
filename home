@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plaything Shop</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <!-- Google Fonts: Itim -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Itim&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #FCF7F3;
+            --primary-color: #422110;
+        }
+
+        *:focus, button:focus, .btn:focus, .form-control:focus {
+            outline: none !important;
+            box-shadow: none !important;
+        }
+        
+        body {
+            background-color: var(--bg-color);
+            color: var(--primary-color);
+            font-family: "Itim", cursive;
+            font-size: 0.9rem;
+        }
+
+        .app-container {
+            max-width: 820px;
+            margin: 0 auto;
+            background-color: var(--bg-color);
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background-color: var(--primary-color);
+            box-shadow: 0 3px 5px rgba(0,0,0,0.1);
+            padding-bottom: 25px; 
+        }
+        .navbar-brand { cursor: pointer; }
+
+        .nav-scroll {
+            display: flex;
+            overflow-x: auto;
+            gap: 8px;
+            padding: 5px 0;
+            scrollbar-width: none;
+            min-width: 0;
+        }
+        .nav-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .btn-nav {
+            color: var(--bg-color);
+            background-color: rgba(253, 247, 243, 0.15);
+            border: 1px solid rgba(253, 247, 243, 0.3);
+            border-radius: 20px;
+            padding: 6px 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            text-decoration: none;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+        .btn-nav:hover, .btn-nav:active {
+            color: var(--primary-color) !important;
+            background-color: var(--bg-color);
+            border-color: var(--bg-color);
+            transform: translateY(-1px);
+        }
+
+        .btn-custom {
+            background-color: var(--primary-color);
+            color: var(--bg-color);
+            border: none;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+        .btn-custom:hover {
+            background-color: #2b150a;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .product-card {
+            background-color: white;
+            border: 1px solid rgba(66, 33, 16, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .product-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(66, 33, 16, 0.12);
+        }
+        .card-title {
+            color: var(--primary-color);
+            font-weight: bold;
+            font-size: 0.85rem;
+        }
+        .product-card-img {
+            aspect-ratio: 1 / 1;
+            width: 100%;
+            object-fit: cover;
+        }
+
+        .horizontal-scroll-container {
+            display: flex;
+            overflow-x: auto;
+            gap: 12px;
+            padding: 5px 2px 20px 2px; 
+            scroll-snap-type: x mandatory; 
+        }
+        .horizontal-scroll-item {
+            flex: 0 0 auto;
+            width: 140px;
+            scroll-snap-align: start; 
+        }
+        .horizontal-scroll-container::-webkit-scrollbar { height: 5px; }
+        .horizontal-scroll-container::-webkit-scrollbar-track {
+            background-color: rgba(66, 33, 16, 0.05);
+            border-radius: 10px;
+        }
+        .horizontal-scroll-container::-webkit-scrollbar-thumb {
+            background-color: var(--primary-color);
+            border-radius: 10px;
+            opacity: 0.7;
+        }
+
+        .detail-card {
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+
+        /* --- สไตล์สำหรับ Thumbnail ด้านล่างรูปภาพ --- */
+        .thumbnail-container {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            margin-top: 12px;
+            padding-bottom: 5px;
+            scrollbar-width: none;
+        }
+        .thumbnail-container::-webkit-scrollbar { display: none; }
+        
+        .thumbnail-item {
+            width: 65px;
+            height: 65px;
+            object-fit: cover;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            opacity: 0.5;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+            background-color: #000;
+        }
+        .thumbnail-item.active {
+            border-color: var(--primary-color);
+            opacity: 1;
+        }
+        .thumbnail-item:hover {
+            opacity: 1;
+        }
+
+        /* --- Social Follow Banner Section --- */
+        .social-follow-section {
+            background-color: #FFEFEA;
+            border-radius: 18px;
+            padding: 16px;
+            position: relative;
+            box-shadow: 0 3px 10px rgba(66, 33, 16, 0.04);
+            border: 1px solid rgba(255, 208, 192, 0.6);
+        }
+
+        .social-follow-title {
+            color: var(--primary-color);
+            font-size: 1.05rem;
+            font-weight: bold;
+            margin-bottom: 2px;
+        }
+
+        .social-follow-subtitle {
+            color: #7d5b4b;
+            font-size: 0.78rem;
+            margin-bottom: 12px;
+        }
+
+        .mascot-box {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .speech-bubble {
+            background-color: white;
+            border: 1.5px solid #FFC9B9;
+            border-radius: 20px;
+            padding: 3px 10px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            text-align: center;
+            line-height: 1.25;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+            position: relative;
+        }
+        .speech-bubble::after {
+            content: '';
+            position: absolute;
+            right: -6px;
+            top: 50%;
+            transform: translateY(-50%);
+            border-width: 5px 0 5px 6px;
+            border-style: solid;
+            border-color: transparent transparent transparent white;
+            z-index: 2;
+        }
+        .speech-bubble::before {
+            content: '';
+            position: absolute;
+            right: -8px;
+            top: 50%;
+            transform: translateY(-50%);
+            border-width: 6px 0 6px 7px;
+            border-style: solid;
+            border-color: transparent transparent transparent #FFC9B9;
+            z-index: 1;
+        }
+
+        .social-card-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            border-radius: 12px;
+            color: white !important;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+            min-height: 52px;
+        }
+        .social-card-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 12px rgba(0,0,0,0.15);
+            opacity: 0.95;
+        }
+        .social-card-icon {
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            font-size: 1.35rem;
+        }
+        .social-card-text {
+            line-height: 1.15;
+            display: flex;
+            flex-direction: column;
+        }
+        .social-card-title { font-weight: bold; font-size: 0.85rem; }
+        .social-card-sub { font-size: 0.7rem; opacity: 0.9; font-weight: normal; }
+        .social-card-action { font-size: 0.65rem; opacity: 0.85; margin-top: 1px; }
+
+        .bg-btn-facebook { background: linear-gradient(135deg, #1877F2 0%, #0d65d9 100%); }
+        .bg-btn-instagram { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
+        .bg-btn-tiktok { background: linear-gradient(135deg, #121212 0%, #222222 100%); }
+        .bg-btn-line { background: linear-gradient(135deg, #06C755 0%, #02a945 100%); }
+
+        /* แกลลอรี่ช็อปสดญี่ปุ่น */
+        .live-shop-img {
+            aspect-ratio: 1 / 1;
+            width: 100%;
+            object-fit: cover;
+            border-radius: 10px;
+            cursor: pointer;
+            border: 1px solid rgba(66, 33, 16, 0.1);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .live-shop-img:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 10px rgba(66, 33, 16, 0.15);
+        }
+        .live-video-wrapper {
+            aspect-ratio: 1 / 1;
+            width: 100%;
+            border-radius: 12px;
+            overflow: hidden;
+            background-color: #1a1a1a;
+            border: 1px solid rgba(66, 33, 16, 0.12);
+        }
+
+        /* Footer Styles */
+        .footer-banner-wrapper {
+            position: relative;
+            margin-bottom: -22px;
+            z-index: 2;
+            padding: 0 10px;
+        }
+        .line-capsule {
+            background: linear-gradient(180deg, #381b0d 0%, #1e0b03 100%);
+            border: 1.5px solid #5a311b;
+            border-radius: 50px;
+            color: white;
+            padding: 6px 16px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+        .badge-line {
+            background-color: #06C755;
+            color: white;
+            font-weight: bold;
+            border-radius: 20px;
+            padding: 2px 10px;
+            font-size: 0.75rem;
+        }
+        .qr-box {
+            width: 42px;
+            height: 42px;
+            background-color: white;
+            border-radius: 6px;
+            padding: 2px;
+        }
+        .footer-main {
+            background-color: var(--primary-color);
+            color: var(--bg-color);
+            padding-top: 38px;
+            padding-bottom: 15px;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+        }
+        .social-btn {
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            padding: 4px 12px;
+            color: white !important;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: transform 0.2s;
+        }
+        .social-btn:hover { transform: scale(1.05); }
+        .bg-fb { background-color: #1877F2; }
+        .bg-ig { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
+        .bg-tk { background-color: #000000; border: 1px solid #333;}
+        .bg-line { background-color: #06C755; }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <div style="background-color: #FDE3CC;">
+            
+            <!-- Navbar -->
+            <nav class="navbar py-2 px-2">
+                <div class="container-fluid p-0 d-flex align-items-center flex-nowrap gap-2">
+                    <a class="navbar-brand m-0 p-0 flex-shrink-0" onclick="showView('home')">
+                        <img src="https://lh3.googleusercontent.com/d/1tQxufV9QPB8eeHuN5jYXe4be02RFl2kG" alt="Logo" style="max-width: 45px; height: auto;">
+                    </a>
+                    
+                    <div class="nav-scroll flex-grow-1">
+                        <button class="btn btn-nav" onclick="showView('home')">หน้าแรก</button>
+                        <button class="btn btn-nav" onclick="showView('all')">สินค้าพร้อมส่ง</button>
+                        <button class="btn btn-nav" onclick="showView('articles')">ช็อปสดญี่ปุ่น</button>
+                        <button class="btn btn-nav" onclick="showView('shipping')">บริการส่งของ</button>
+                        <button class="btn btn-nav" onclick="showView('how-to-order')">วิธีสั่งซื้อ</button>
+                        <a href="#footer-contact" class="btn btn-nav">ติดต่อเรา</a>
+                    </div>
+                </div>
+            </nav>
+            <img src="https://lh3.googleusercontent.com/d/18DRci20SzxmIL3vpFiIFOBY4oYtPSJnv" alt="Hero Image" style="max-width: 100%; height: auto;">
+        </div>
+
+        <!-- Main Content -->
+        <div class="px-2 mt-3">
+            
+            <!-- VIEW 1: หน้าแรก -->
+            <div id="home-view">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div>
+                        <h5 class="fw-bold m-0">สินค้าแนะนำสำหรับคุณ</h5>
+                    </div>
+                    <button class="btn btn-custom" onclick="showView('all')">ดูสินค้าทั้งหมด</button>
+                </div>
+
+                <div class="horizontal-scroll-container" id="carousel-container">
+                    <div class="w-100 d-flex justify-content-center py-4">
+                        <div class="spinner-border spinner-border-sm text-dark" role="status"></div>
+                    </div>
+                </div> 
+
+                <!-- ส่วนรีวิวจากลูกค้า -->
+                <div class="mt-4 mb-4">
+                    <h5 class="fw-bold m-0 mb-3">รีวิวจากลูกค้าของเรา</h5>
+                    <div class="horizontal-scroll-container" id="reviews-container">
+                        <div class="w-100 d-flex justify-content-center py-2">
+                            <div class="spinner-border spinner-border-sm text-dark" role="status"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW 2: สินค้าทั้งหมด -->
+            <div id="all-products-view" style="display: none;">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-bold m-0">สินค้าพร้อมส่ง</h5>
+                    <button class="btn btn-custom" style="border-color: var(--primary-color); color: var(--bg-color);" onclick="showView('home')">
+                        <i class="bi bi-arrow-left"></i> กลับหน้าแรก
+                    </button>
+                </div>
+                <div class="row mt-2 g-2" id="grid-container"></div>
+            </div>
+
+            <!-- VIEW 3: หน้ารายละเอียดสินค้า -->
+            <div id="detail-view" style="display: none; padding-bottom: 30px;">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-bold m-0">รายละเอียดสินค้า</h5>
+                    <button class="btn btn-custom text-light" onclick="goBack()">
+                        <i class="bi bi-arrow-left"></i> ย้อนกลับ
+                    </button>
+                </div>
+                
+                <div class="detail-card">
+                    <div class="row g-0">
+                        <!-- ฝั่งซ้าย: รูปภาพและวิดีโอ (ปิดการเลื่อนอัตโนมัติด้วย data-bs-interval="false") -->
+                        <div class="col-12 col-md-6 p-3 text-center border-end">
+                            <div id="productDetailCarousel" class="carousel slide" data-bs-interval="false">
+                                <div class="carousel-inner rounded-3 shadow-sm" id="detailCarouselInner">
+                                    <!-- รูปและวิดีโอหลัก -->
+                                </div>
+                                <button class="carousel-control-prev" type="button" data-bs-target="#productDetailCarousel" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true" style="background-color: rgba(0,0,0,0.3); border-radius: 50%;"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#productDetailCarousel" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true" style="background-color: rgba(0,0,0,0.3); border-radius: 50%;"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
+                            </div>
+
+                            <!-- ส่วน Thumbnail สำหรับกดเลือกด้านล่าง -->
+                            <div class="thumbnail-container justify-content-start justify-content-md-center" id="detailThumbnails">
+                                <!-- รูป/วิดีโอตัวอย่างจะถูกใส่ที่นี่ -->
+                            </div>
+                        </div>
+
+                        <!-- ฝั่งขวา: รายละเอียดและปุ่มสั่งซื้อ -->
+                        <div class="col-12 col-md-6 p-4 d-flex flex-column">
+                            <h3 class="fw-bold mb-2" id="detailProductTitle" style="color: var(--primary-color);"></h3>
+                            <h4 id="detailProductPrice" class="fw-bold mb-3" style="color: var(--primary-color);"></h4>
+                            <hr style="border-color: rgba(66, 33, 16, 0.2);">
+                            
+                            <div class="flex-grow-1">
+                                <p class="fw-bold mb-1">รายละเอียด:</p>
+                                <p id="detailProductDescription" class="text-muted small" style="line-height: 1.6;"></p>
+                            </div>
+                            
+                            <!-- ปุ่มสั่งซื้อ LINE -->
+                            <a href="https://lin.ee/VMZJIRA" target="_blank" class="btn w-100 mt-4 shadow-sm" style="background-color: #06C755; color: white; border-radius: 30px; font-weight: bold; font-size: 1.1rem; padding: 12px;">
+                                <i class="bi bi-line me-2"></i> สั่งซื้อผ่าน LINE
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW 4: ช็อปสดญี่ปุ่น -->
+            <div id="articles-view" style="display: none; padding-bottom: 30px;">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-bold m-0">ช็อปสดญี่ปุ่น</h5>
+                    <button class="btn btn-custom text-light" onclick="showView('home')"><i class="bi bi-arrow-left"></i> กลับหน้าแรก</button>
+                </div>
+                
+                <div class="detail-card p-3">
+                    <div class="text-center mb-3">
+                        <h4 class="fw-bold mb-1" style="color: var(--primary-color);">อัปเดตช็อปสดจากญี่ปุ่น</h4>
+                        <p class="text-muted small mb-0" style="line-height: 1.6;">บรรยากาศการเดินช็อปและสินค้าพรีออเดอร์สดๆ จากญี่ปุ่น แคปรูปทักแชทสอบถามได้เลยครับ!</p>
+                    </div>
+
+                    <!-- ส่วนวิดีโอช็อปสด 2 คลิป -->
+                    <h6 class="fw-bold mb-2 mt-3" style="color: var(--primary-color);">
+                        <i class="bi bi-camera-reels-fill me-1"></i> คลิปบรรยากาศช็อปสด
+                    </h6>
+                    <div class="row g-2 mb-4">
+                        <div class="col-12 col-sm-6">
+                            <div class="live-video-wrapper live-video-slot" data-label="คลิปช็อปสด 1" data-video-url="https://drive.google.com/file/d/12sFpA6pKL8YbSPwecL4yLNdZb-h1ztmn/view?usp=drivesdk"></div>
+                        </div>
+                        <div class="col-12 col-sm-6">
+                            <div class="live-video-wrapper live-video-slot" data-label="คลิปช็อปสด 2" data-video-url="https://drive.google.com/file/d/1a1T1zc0INJp3eKAJJmppw9ReJS2p6BnO/view?usp=drivesdk"></div>
+                        </div>
+                    </div>
+
+                    <!-- ส่วนรูปภาพช็อปสด 10 รูป -->
+                    <h6 class="fw-bold mb-2" style="color: var(--primary-color);">
+                        <i class="bi bi-images me-1"></i> ภาพสินค้าและบรรยากาศช็อปสด (แตะที่รูปเพื่อขยาย)
+                    </h6>
+                    <div class="row g-2">
+                        <div class="col-6">
+                            <img src="https://img2.pic.in.th/1000003951e25a74ca58eca1ee.jpg" class="live-shop-img" alt="ช็อปสดญี่ปุ่น 1" onclick="openImagePreview(this.src)">
+                        </div>
+                        <div class="col-6">
+                            <img src="https://img2.pic.in.th/1000003950578f0f421b2324dd.jpg" class="live-shop-img" alt="ช็อปสดญี่ปุ่น 2" onclick="openImagePreview(this.src)">
+                        </div>
+                        <div class="col-6">
+                            <img src="https://img1.pic.in.th/images/10000039496c498db131c616ba.jpg" class="live-shop-img" alt="ช็อปสดญี่ปุ่น 3" onclick="openImagePreview(this.src)">
+                        </div>
+                        <div class="col-6">
+                            <img src="https://img2.pic.in.th/1000003953bf79c7063f896dfa.jpg" class="live-shop-img" alt="ช็อปสดญี่ปุ่น 4" onclick="openImagePreview(this.src)">
+                        </div>
+                        <div class="col-6">
+                            <img src="https://img1.pic.in.th/images/1000003952d4a142614b6c4536.jpg" class="live-shop-img" alt="ช็อปสดญี่ปุ่น 5" onclick="openImagePreview(this.src)">
+                        </div>
+                        <div class="col-6">
+                            <img src="https://img1.pic.in.th/images/100000395610bcc9c2b99c5eae.jpg" class="live-shop-img" alt="ช็อปสดญี่ปุ่น 6" onclick="openImagePreview(this.src)">
+                        </div>
+                        <div class="col-6">
+                            <img src="https://img1.pic.in.th/images/1000003955a5749223d94c523f.jpg" class="live-shop-img" alt="ช็อปสดญี่ปุ่น 7" onclick="openImagePreview(this.src)">
+                        </div>
+                        <div class="col-6">
+                            <img src="https://img2.pic.in.th/10000039543412424ec123c382.jpg" class="live-shop-img" alt="ช็อปสดญี่ปุ่น 8" onclick="openImagePreview(this.src)">
+                        </div>
+                        <div class="col-6">
+                            <img src="https://img1.pic.in.th/images/1000003958d0dde649fc2b9df6.jpg" class="live-shop-img" alt="ช็อปสดญี่ปุ่น 9" onclick="openImagePreview(this.src)">
+                        </div>
+                        <div class="col-6">
+                            <img src="https://img2.pic.in.th/100000395763be2296b345df66.jpg" class="live-shop-img" alt="ช็อปสดญี่ปุ่น 10" onclick="openImagePreview(this.src)">
+                        </div>
+                    </div>
+
+                    <!-- ปุ่มแอดไลน์ฝากหิ้ว / สั่งซื้อ -->
+                    <div class="mt-4">
+                        <a href="https://lin.ee/VMZJIRA" target="_blank" class="btn w-100 shadow-sm" style="background-color: #06C755; color: white; border-radius: 25px; font-weight: bold; padding: 10px;">
+                            <i class="bi bi-line me-1"></i> สนใจฝากหิ้ว / สอบถามสินค้าช็อปสดผ่าน LINE
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW 5: บริการส่งของจากญี่ปุ่นกลับไทย -->
+            <div id="shipping-view" style="display: none; padding-bottom: 30px;">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-bold m-0">บริการส่งของจากญี่ปุ่นกลับไทย</h5>
+                    <button class="btn btn-custom text-light" onclick="showView('home')"><i class="bi bi-arrow-left"></i> กลับหน้าแรก</button>
+                </div>
+
+                <div class="detail-card p-2">
+                    <div id="shippingCarousel" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-indicators">
+                            <button type="button" data-bs-target="#shippingCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                            <button type="button" data-bs-target="#shippingCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                            <button type="button" data-bs-target="#shippingCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                            <button type="button" data-bs-target="#shippingCarousel" data-bs-slide-to="3" aria-label="Slide 4"></button>
+                        </div>
+
+                        <div class="carousel-inner rounded-3">
+                            <div class="carousel-item active">
+                                <img src="https://img2.pic.in.th/1000003872.jpg" class="d-block w-100" alt="บริการส่งของ 1">
+                            </div>
+                            <div class="carousel-item">
+                                <img src="https://img1.pic.in.th/images/1000003873fd020cc4a6f820e0.jpg" class="d-block w-100" alt="บริการส่งของ 2">
+                            </div>
+                            <div class="carousel-item">
+                                <img src="https://img2.pic.in.th/10000038744abee0ddcef0e900.jpg" class="d-block w-100" alt="บริการส่งของ 3">
+                            </div>
+                            <div class="carousel-item">
+                                <img src="https://img2.pic.in.th/10000038752be8a15ef832fc36.jpg" class="d-block w-100" alt="บริการส่งของ 4">
+                            </div>
+                        </div>
+
+                        <button class="carousel-control-prev" type="button" data-bs-target="#shippingCarousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true" style="background-color: rgba(66, 33, 16, 0.6); border-radius: 50%; padding: 12px;"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#shippingCarousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true" style="background-color: rgba(66, 33, 16, 0.6); border-radius: 50%; padding: 12px;"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+
+                    <div class="p-2 mt-1">
+                        <a href="https://lin.ee/VMZJIRA" target="_blank" class="btn w-100 shadow-sm" style="background-color: #06C755; color: white; border-radius: 25px; font-weight: bold; padding: 10px;">
+                            <i class="bi bi-line me-1"></i> สอบถามเรทค่าส่ง / แจ้งส่งของผ่าน LINE
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW 6: วิธีสั่งซื้อ -->
+            <div id="how-to-order-view" style="display: none; padding-bottom: 30px;">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-bold m-0">วิธีสั่งซื้อ</h5>
+                    <button class="btn btn-custom text-light" onclick="showView('home')"><i class="bi bi-arrow-left"></i> กลับหน้าแรก</button>
+                </div>
+                <div class="detail-card p-2">
+                    <a href="https://lin.ee/VMZJIRA" target="_blank">
+                        <img src="https://lh3.googleusercontent.com/d/15_INuAOYduK8gTEP8vypOk_-3DbWiXC6" alt="วิธีสั่งซื้อ" class="img-fluid w-100 rounded" style="cursor: pointer;">     
+                    </a>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Banners ก่อนถึง Footer -->
+        <div class="px-2 mt-4 mb-3">
+            <div class="row g-2">
+                <div class="col-6">
+                    <a href="#" onclick="showView('articles'); return false;">
+                        <img src="https://lh3.googleusercontent.com/d/1x7RglmcK484RXjF2kXfsvwH3okPDnmSs" alt="Banner 1" class="img-fluid w-100 rounded" style="cursor: pointer;">
+                    </a>
+                </div>
+                <div class="col-6">
+                    <a href="#" onclick="showView('shipping'); return false;">
+                        <img src="https://lh3.googleusercontent.com/d/1fKnz2hLtoPLtOvrgb8p2AKmlXUbhCWei" alt="Banner 2" class="img-fluid w-100 rounded" style="cursor: pointer;">
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Social Follow -->
+        <div class="px-2 mb-3">
+            <div class="social-follow-section">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <div>
+                        <div class="social-follow-title">ติดตาม Plaything Shop ได้ทุกช่องทาง</div>
+                        <div class="social-follow-subtitle">โปรโมชัน และคอนเทนต์น่ารักๆ จากญี่ปุ่น</div>
+                    </div>
+                    <div class="mascot-box d-none d-sm-flex align-items-center">
+                        <div class="speech-bubble">Follow us!<br>ติดตามร้านเรา<br>กันนะคะ</div>
+                        <div style="font-size: 1.8rem; line-height: 1;">🐻</div>
+                    </div>
+                </div>
+                <div class="row g-2">
+                    <div class="col-6 col-md-3">
+                        <a href="https://www.facebook.com/share/14sSMKBSboh/?mibextid=wwXIfr" target="_blank" class="social-card-btn bg-btn-facebook">
+                            <div class="social-card-icon"><i class="bi bi-facebook"></i></div>
+                            <div class="social-card-text">
+                                <span class="social-card-title">Facebook</span>
+                                <span class="social-card-sub">Plaything Shop</span>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <a href="https://instagram.com/play.thingshop?exln=MW5saWZzMm54bnQw&utm_source=qr" target="_blank" class="social-card-btn bg-btn-instagram">
+                            <div class="social-card-icon"><i class="bi bi-instagram"></i></div>
+                            <div class="social-card-text">
+                                <span class="social-card-title">Instagram</span>
+                                <span class="social-card-sub">play.thingshop</span>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <a href="https://www.tiktok.com/@play.thingshop" target="_blank" class="social-card-btn bg-btn-tiktok">
+                            <div class="social-card-icon"><i class="bi bi-tiktok"></i></div>
+                            <div class="social-card-text">
+                                <span class="social-card-title">TikTok</span>
+                                <span class="social-card-sub">@play.thingshop</span>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <a href="https://lin.ee/VMZJIRA" target="_blank" class="social-card-btn bg-btn-line">
+                            <div class="social-card-icon"><i class="bi bi-line"></i></div>
+                            <div class="social-card-text">
+                                <span class="social-card-title">LINE</span>
+                                <span class="social-card-sub">สอบถาม / สั่งซื้อ</span>
+                                <span class="social-card-action">คลิกเลย <i class="bi bi-arrow-right"></i></span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FOOTER SECTION -->
+        <footer class="mt-4" id="footer-contact">
+            <div class="mt-4 mb-4">
+                <img src="https://lh3.googleusercontent.com/d/1u0-Ht0QPxrBxoEA5frImSXTfA2Rvo8IB" style="max-width: 100%; height: auto;">
+            </div>
+            
+            <div class="footer-banner-wrapper">
+                <div class="line-capsule mx-auto d-flex align-items-center justify-content-between" style="max-width: 680px;">
+                    <div class="d-flex align-items-center gap-2">
+                        <a class="badge-line text-decoration-none" href="https://lin.ee/VMZJIRA" target="_blank">LINE</a>
+                        <a class="fw-bold text-white text-decoration-none" href="https://lin.ee/VMZJIRA" target="_blank" style="font-size: 0.8rem;">
+                            ติดต่อ / สอบถาม / สั่งซื้อ <span class="d-none d-sm-inline">ทัก LINE OA ได้เลย! ▶</span>
+                        </a>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <img src="https://lh3.googleusercontent.com/d/1mOjWqi2xgXQ7rhtplPEhjHQ0kYa_1rei" alt="LINE QR Code" class="qr-box">
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-main">
+                <div class="container px-4">
+                    <div class="row g-3 text-start align-items-start">
+                        <div class="col-md-5">
+                            <h6 class="fw-bold mb-1" style="font-size: 0.95rem;">Plaything Shop</h6>
+                            <p class="mb-0 text-white-50" style="font-size: 0.8rem; line-height: 1.5;">
+                                ของเล่นญี่ปุ่น ของสะสม ของแท้<br>นำเข้าจากญี่ปุ่น สู่มือคุณ
+                            </p>
+                        </div>
+                        <div class="col-md-7">
+                            <h6 class="fw-bold mb-2" style="font-size: 0.85rem;">ติดตามและติดต่อเราได้ที่</h6>
+                            <div class="d-flex flex-wrap gap-2 mt-2">
+                                <a href="https://www.facebook.com/share/14sSMKBSboh/?mibextid=wwXIfr" target="_blank" class="social-btn bg-fb"><i class="bi bi-facebook me-1"></i> Facebook</a>
+                                <a href="https://instagram.com/play.thingshop?exln=MW5saWZzMm54bnQw&utm_source=qr" target="_blank" class="social-btn bg-ig"><i class="bi bi-instagram me-1"></i> Instagram</a>
+                                <a href="https://www.tiktok.com/@play.thingshop" target="_blank" class="social-btn bg-tk"><i class="bi bi-tiktok me-1"></i> TikTok</a>
+                                <a href="https://lin.ee/VMZJIRA" target="_blank" class="social-btn bg-line"><i class="bi bi-line me-1"></i> LINE OA</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center mt-4 pt-3 border-top border-secondary border-opacity-25">
+                        <p class="mb-0 text-white-50" style="font-size: 0.68rem;">© 2026 Plaything Shop. All Rights Reserved.</p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Modal สำหรับขยายดูรูปภาพช็อปสดญี่ปุ่น -->
+    <div class="modal fade" id="imagePreviewModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-transparent border-0">
+                <div class="modal-body p-1 text-center position-relative">
+                    <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-2 bg-dark p-2 rounded-circle" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <img id="previewModalImg" src="" class="img-fluid rounded-3 shadow-lg" alt="Preview">
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        const GOOGLE_SHEET_API_URL = 'https://script.google.com/macros/s/AKfycbzVAdEnQG4D25gIrjsxz_Ost2aywzwqpTtb3EG3ZP5C59es4XqbGW-hLSSj10r4drcB/exec';
+
+        let globalProducts = [];
+        let previousView = 'home';
+
+        function formatDriveImageUrl(rawUrl) {
+            if (!rawUrl) return '';
+            const urlStr = String(rawUrl).trim();
+            const match = urlStr.match(/[-\w]{25,}/);
+            if (match && match[0] && (urlStr.includes('drive.google.com') || urlStr.includes('googleusercontent.com'))) {
+                return `https://lh3.googleusercontent.com/d/${match[0]}`;
+            }
+            return urlStr;
+        }
+
+        function extractImageData(item) {
+            const keys = Object.keys(item);
+            const imageKey = keys.find(k => {
+                const lower = k.toLowerCase().trim();
+                return lower === 'image' || lower === 'img' || lower === 'picture' || lower.includes('รูป');
+            });
+            return formatDriveImageUrl(imageKey ? item[imageKey] : '');
+        }
+
+        // แสดงผลวิดีโอ 2 คลิปในหน้าช็อปสดญี่ปุ่น
+        function initLiveShopVideos() {
+            const slots = document.querySelectorAll('.live-video-slot');
+            slots.forEach(slot => {
+                const vidUrl = (slot.getAttribute('data-video-url') || '').trim();
+                const label = slot.getAttribute('data-label') || 'วิดีโอช็อปสด';
+
+                if (!vidUrl) {
+                    slot.innerHTML = `
+                        <div class="w-100 h-100 d-flex flex-column align-items-center justify-content-center text-white p-3 text-center" style="background: linear-gradient(135deg, #422110 0%, #2b150a 100%);">
+                            <i class="bi bi-play-circle-fill fs-1 mb-2" style="color: #FDE3CC;"></i>
+                            <div class="fw-bold">${label}</div>
+                        </div>
+                    `;
+                    return;
+                }
+
+                if (vidUrl.includes('drive.google.com') || vidUrl.includes('googleusercontent.com')) {
+                    const match = vidUrl.match(/[-\w]{25,}/);
+                    if (match && match[0]) {
+                        slot.innerHTML = `
+                            <iframe src="https://drive.google.com/file/d/${match[0]}/preview" 
+                                    class="w-100 h-100 border-0" 
+                                    allow="autoplay; fullscreen">
+                            </iframe>
+                        `;
+                    }
+                } else {
+                    slot.innerHTML = `
+                        <video controls playsinline class="w-100 h-100" style="object-fit: cover;">
+                            <source src="${vidUrl}" type="video/mp4">
+                            เบราว์เซอร์ของคุณไม่รองรับการเล่นวิดีโอ
+                        </video>
+                    `;
+                }
+            });
+        }
+
+        // เปิดดูรูปขยายในหน้าช็อปสดญี่ปุ่น
+        function openImagePreview(src) {
+            document.getElementById('previewModalImg').src = src;
+            const modal = new bootstrap.Modal(document.getElementById('imagePreviewModal'));
+            modal.show();
+        }
+
+        async function fetchProducts() {
+            const container = document.getElementById('carousel-container');
+            const gridContainer = document.getElementById('grid-container');
+
+            try {
+                const url = GOOGLE_SHEET_API_URL.includes('?') ? `${GOOGLE_SHEET_API_URL}&sheet=Products` : `${GOOGLE_SHEET_API_URL}?sheet=Products`;
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if (data.error || data.length === 0) {
+                    container.innerHTML = '<p class="text-center w-100 text-muted mt-3">ยังไม่มีข้อมูลสินค้า</p>';
+                    return;
+                }
+
+                globalProducts = data.map((item, index) => {
+                    let images = [];
+                    for (let i = 1; i <= 10; i++) {
+                        let imgUrl = item[`Image${i}`] || item[`image${i}`];
+                        if (imgUrl) images.push(formatDriveImageUrl(imgUrl));
+                    }
+                    let videos = [];
+                    for (let i = 1; i <= 2; i++) {
+                        let vidUrl = item[`Video${i}`] || item[`video${i}`];
+                        if (vidUrl) videos.push(vidUrl);
+                    }
+                    
+                    if (images.length === 0) {
+                        const fallbackImg = extractImageData(item);
+                        if(fallbackImg) images.push(fallbackImg);
+                    }
+
+                    return { 
+                        name: item.name || item.Name || item.title || 'ไม่มีชื่อสินค้า',
+                        description: item.description || item.Description || item.detail || '',
+                        price: item.price || item.Price || '0',
+                        images: images,
+                        videos: videos,
+                        displayImage: images.length > 0 ? images[0] : 'https://via.placeholder.com/300x400/e0d4c8/422110?text=No+Image',
+                        id: index
+                    };
+                });
+                
+                renderCarouselView();
+                renderGridView();
+            } catch (error) {
+                const errorMsg = '<p class="text-center w-100 text-danger mt-3">เกิดข้อผิดพลาดในการโหลดข้อมูลสินค้า</p>';
+                container.innerHTML = errorMsg;
+                gridContainer.innerHTML = errorMsg;
+            }
+        }
+
+        async function fetchReviews() {
+            const container = document.getElementById('reviews-container');
+            try {
+                const url = GOOGLE_SHEET_API_URL.includes('?') ? `${GOOGLE_SHEET_API_URL}&sheet=Reviews` : `${GOOGLE_SHEET_API_URL}?sheet=Reviews`;
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                container.innerHTML = '';
+                
+                if(data.error || data.length === 0) {
+                    container.innerHTML = '<p class="text-muted w-100 text-center py-3">ยังไม่มีรีวิวจากลูกค้า</p>';
+                    return;
+                }
+                
+                data.forEach(review => {
+                    const starsCount = parseInt(review.Rating || review.rating || 5);
+                    const stars = '⭐'.repeat(isNaN(starsCount) ? 5 : starsCount);
+                    const img = extractImageData(review) || 'https://via.placeholder.com/80x80/e0d4c8/422110?text=User';
+                    const text = review.Text || review.text || review.Review || '';
+                    const name = review.Name || review.name || 'ลูกค้าที่น่ารัก';
+                    
+                    container.innerHTML += `
+                        <div class="horizontal-scroll-item" style="width: 260px;">
+                            <div class="card p-3 h-100 shadow-sm" style="border: 1px solid rgba(66,33,16,0.1); border-radius: 12px;">
+                                <div class="d-flex align-items-center mb-2">
+                                    <img src="${img}" class="shadow-sm" style="width: 70px; height: 70px; object-fit: cover; margin-right: 12px; border: 2px solid #FDE3CC; border-radius: 50%;">
+                                    <div>
+                                        <h6 class="mb-0 fw-bold" style="font-size: 0.85rem; color: var(--primary-color);">${name}</h6>
+                                        <div style="font-size: 0.65rem;">${stars}</div>
+                                    </div>
+                                </div>
+                                <p class="text-muted mb-0" style="font-size: 0.8rem; white-space: normal; line-height: 1.5;">"${text}"</p>
+                            </div>
+                        </div>
+                    `;
+                });
+            } catch (err) {
+                container.innerHTML = '<p class="text-muted w-100 text-center py-3">เกิดข้อผิดพลาดในการโหลดรีวิว</p>';
+            }
+        }
+
+        function createProductCard(product, isSlide = true) {
+            const cardHTML = `
+                <div class="card product-card h-100" style="width: 100%;" onclick="openDetailView(${product.id})">
+                    <img src="${product.displayImage}" 
+                         onerror="this.onerror=null; this.src='https://via.placeholder.com/300x400/e0d4c8/422110?text=Image+Error';" 
+                         class="card-img-top product-card-img" 
+                         alt="${product.name}">
+                    <div class="card-body text-start d-flex flex-column p-2">
+                        <h6 class="card-title mb-1 text-truncate">${product.name}</h6>
+                        <p class="card-text text-muted mb-1 text-truncate" style="font-size: 0.75rem;">${product.description}</p>
+                        <p class="card-text fw-bold mt-auto mb-0" style="color: var(--primary-color); font-size: 0.85rem;">${product.price} ฿</p>
+                    </div>
+                </div>
+            `;
+            return isSlide ? `<div class="horizontal-scroll-item">${cardHTML}</div>` : cardHTML;
+        }
+
+        function renderCarouselView() {
+            const container = document.getElementById('carousel-container');
+            container.innerHTML = ''; 
+            const shuffled = [...globalProducts].sort(() => 0.5 - Math.random());
+            shuffled.forEach(product => {
+                container.innerHTML += createProductCard(product, true);
+            });
+        }
+
+        function renderGridView() {
+            const container = document.getElementById('grid-container');
+            container.innerHTML = ''; 
+            globalProducts.forEach(product => {
+                container.innerHTML += `
+                    <div class="col-4 col-sm-3 col-md-3">
+                        ${createProductCard(product, false)}
+                    </div>
+                `;
+            });
+        }
+
+        function openDetailView(productId) {
+            const product = globalProducts.find(p => p.id === productId);
+            if (!product) return;
+
+            document.getElementById('detailProductTitle').innerText = product.name;
+            document.getElementById('detailProductDescription').innerText = product.description;
+            document.getElementById('detailProductPrice').innerText = `${product.price} ฿`;
+
+            const carouselInner = document.getElementById('detailCarouselInner');
+            const thumbnailContainer = document.getElementById('detailThumbnails');
+            
+            carouselInner.innerHTML = '';
+            thumbnailContainer.innerHTML = '';
+            
+            let itemIndex = 0;
+
+            // 1. แทรกรูปภาพก่อน
+            if (product.images.length > 0) {
+                product.images.forEach(img => {
+                    carouselInner.innerHTML += `
+                        <div class="carousel-item ${itemIndex === 0 ? 'active' : ''}">
+                            <img src="${img}" 
+                                 onerror="this.onerror=null; this.src='https://via.placeholder.com/300x400/e0d4c8/422110?text=No+Image';" 
+                                 class="d-block w-100" 
+                                 style="aspect-ratio: 1/1; max-height: 400px; object-fit: cover;">
+                        </div>
+                    `;
+                    thumbnailContainer.innerHTML += `
+                        <img src="${img}" 
+                             onerror="this.onerror=null; this.src='https://via.placeholder.com/65x65/e0d4c8/422110?text=No+Image';" 
+                             class="thumbnail-item ${itemIndex === 0 ? 'active' : ''}" 
+                             data-bs-target="#productDetailCarousel" data-bs-slide-to="${itemIndex}">
+                    `;
+                    itemIndex++;
+                });
+            } else if (product.videos.length === 0) {
+                carouselInner.innerHTML = `
+                    <div class="carousel-item active">
+                        <img src="https://via.placeholder.com/300x400/e0d4c8/422110?text=No+Image" class="d-block w-100" style="aspect-ratio: 1/1; max-height: 400px; object-fit: cover;">
+                    </div>
+                `;
+                thumbnailContainer.innerHTML = `
+                    <img src="https://via.placeholder.com/65x65/e0d4c8/422110?text=No+Image" class="thumbnail-item active">
+                `;
+            }
+
+            // 2. แทรกวิดีโอไว้ทีหลัง
+            product.videos.forEach(vidUrl => {
+                let videoHTML = '';
+                
+                if (vidUrl.includes('drive.google.com') || vidUrl.includes('googleusercontent.com')) {
+                    const match = vidUrl.match(/[-\w]{25,}/);
+                    if (match && match[0]) {
+                        const driveId = match[0];
+                        videoHTML = `
+                            <iframe src="https://drive.google.com/file/d/${driveId}/preview" 
+                                    class="d-block w-100" 
+                                    style="aspect-ratio: 1/1; max-height: 400px; border: none; background: #000;" 
+                                    allow="autoplay">
+                            </iframe>
+                        `;
+                    }
+                } else {
+                    videoHTML = `
+                        <video controls muted playsinline class="d-block w-100" style="aspect-ratio: 1/1; object-fit: cover; max-height: 400px; background: #000;">
+                            <source src="${vidUrl}" type="video/mp4">
+                        </video>
+                    `;
+                }
+
+                if (videoHTML) {
+                    carouselInner.innerHTML += `
+                        <div class="carousel-item ${itemIndex === 0 ? 'active' : ''}">
+                            ${videoHTML}
+                        </div>
+                    `;
+                    thumbnailContainer.innerHTML += `
+                        <div class="thumbnail-item ${itemIndex === 0 ? 'active' : ''} d-flex align-items-center justify-content-center" 
+                             data-bs-target="#productDetailCarousel" data-bs-slide-to="${itemIndex}" style="background-color: #333;">
+                            <i class="bi bi-play-circle-fill text-white fs-3"></i>
+                        </div>
+                    `;
+                    itemIndex++;
+                }
+            });
+
+            showView('detail');
+        }
+
+        function showView(viewName) {
+            const views = ['home', 'all', 'detail', 'articles', 'shipping', 'how-to-order'];
+            
+            if (viewName !== 'detail') {
+                previousView = viewName;
+            }
+
+            views.forEach(v => {
+                const el = document.getElementById(`${v === 'all' ? 'all-products' : v}-view`);
+                if (el) el.style.display = viewName === v ? 'block' : 'none';
+            });
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function goBack() {
+            showView(previousView);
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            initLiveShopVideos();
+            fetchProducts();
+            fetchReviews();
+
+            const detailCarousel = document.getElementById('productDetailCarousel');
+            
+            detailCarousel.addEventListener('slide.bs.carousel', function (e) {
+                const slideIndex = e.to;
+                const thumbnails = document.querySelectorAll('#detailThumbnails .thumbnail-item');
+                thumbnails.forEach((thumb, i) => {
+                    if (i === slideIndex) {
+                        thumb.classList.add('active');
+                    } else {
+                        thumb.classList.remove('active');
+                    }
+                });
+            });
+
+            detailCarousel.addEventListener('slid.bs.carousel', function (e) {
+                const activeItem = e.relatedTarget; 
+
+                const allVideos = detailCarousel.querySelectorAll('video');
+                allVideos.forEach(video => {
+                    video.pause();
+                });
+
+                const activeVideo = activeItem.querySelector('video');
+                if (activeVideo) {
+                    activeVideo.play().catch(err => {
+                        console.log("Auto-play prevented by browser:", err);
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
